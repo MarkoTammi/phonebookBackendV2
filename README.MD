@@ -25,5 +25,9 @@ npm install --save-dev nodemon
 Lisätty API /info  
 Luotu .gitignore - node_modules  
 
+3.3: puhelinluettelon backend step3 - git branch part3-2Step3  
+Lisätty /api/persons/:id yksittäisen käyttäjän tietojen hakemiseen  
+Jos id ei ol palautus 404.end()  
+
 
 
