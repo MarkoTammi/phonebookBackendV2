@@ -29,5 +29,11 @@ Luotu .gitignore - node_modules
 Lisätty /api/persons/:id yksittäisen käyttäjän tietojen hakemiseen  
 Jos id ei ol palautus 404.end()  
 
+3.4: puhelinluettelon backend step4 - git branch part3-4Step4  
+Lisätty yksittäisen käyttäjän poisto.  
+Jos id ei ol palautus 404.end()  
+Lisätty /test-request - hakemisto VS Coden REST testeille  
+
+
 
 

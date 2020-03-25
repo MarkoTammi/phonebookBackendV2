@@ -43,34 +43,47 @@ let persons = [
       }
     ]
 
-app.get('/', (req, res) => {
-    res.send('<p>HY Fullstack MooC Phonebook backend V2 by MarkoTammi</p>')
+app.get('/', (request, response) => {
+    response.send('<p>HY Fullstack MooC Phonebook backend V2 by MarkoTammi</p>')
     })
 
 
 // Info how many names in phonebook with timestamp
-app.get('/info', function (req,res) {
+app.get('/info', function (request,response) {
     const personLength = persons.length.toString()
-    const response = '<p>Phonebook has info for '+ personLength + ' people</p><p>' + new Date() + '</p>'
-    res.send(response)
+    const resContent = '<p>Phonebook has info for '+ personLength + ' people</p><p>' + new Date() + '</p>'
+    response.send(resContent)
 })
 
 // To get all persons
-app.get('/api/persons', (req, res) => {
-    res.json(persons)
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
     })
 
 
 // Person info based on id number
-app.get('/api/persons/:id', function (req,res) {
-    const id = Number(req.params.id)
+app.get('/api/persons/:id', function (request,response) {
+    const id = Number(request.params.id)
     const person = persons.find(person => person.id === id)
     if (person) {
-        res.json(person)
+        response.json(person)
     } else {
-        // If person is not found by if return 404
-        res.status(404).end()
+        // If person is not found by id return 404
+        response.status(404).end()
     }})
+
+// Delete person based on id
+app.delete('/api/person/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+    if (person) {
+        persons = persons.filter(person => person.id !== id)  
+        response.status(204).end()
+    } else {
+        // If person is not found by id return 404
+        response.status(404).end()
+    }})
+
 
 const port = 3001
 app.listen(port)
