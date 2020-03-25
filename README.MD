@@ -3,13 +3,27 @@
 
 ## HY / Fullstack MOOC / Phonebook backend v2
 
-luotu - npm init  
-git init  
+### Luonti  
+
+srv luotu - npm init  
+repo - git init  
 
 ### Käynnistys  
-front - npm start >> localhost:3000  
-backend - npm start  
+Backendin käynnistys kehitysmoodissa  
+npm run dev >> localhost:3001  
 
 
 ### Edistyminen
+
+3.1 puhelinluettelon backend step1  
+Asennettu Express - kirjasto  
+npm install express --save  
+Asennettu Nodemon tarkkailemaan koodin muutoksia  
+npm install --save-dev nodemon  
+
+3.2: puhelinluettelon backend step2  - git branch part3-2step2  
+Lisätty API /info  
+Luotu .gitignore - node_modules  
+
+
 

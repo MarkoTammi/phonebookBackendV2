@@ -1,8 +1,9 @@
 
-// Start server by "npm start"
+// Start server by "npm run dev"
 
-// Ottaa käyttöö Noden sisäänrakennetun web-palvelimen
-const http = require('http')
+// 
+const express = require('express')
+const app = express()
 
 let persons = [
       {
@@ -42,14 +43,23 @@ let persons = [
       }
     ]
 
+app.get('/', (req, res) => {
+    res.send('<p>HY Fullstack MooC Phonebook backend V2 by MarkoTammi</p>')
+    })
 
 
-
-// Luodaan http-palvelin
-const app = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' })
-  res.end(JSON.stringify(persons))
+// Info how many names in phonebook with timestamp
+app.get('/info', function (req,res) {
+    const personLength = persons.length.toString()
+    const response = '<p>Phonebook has info for '+ personLength + ' people</p><p>' + new Date() + '</p>'
+    res.send(response)
 })
+
+
+app.get('/api/persons', (req, res) => {
+    res.json(persons)
+    })
+
 
 const port = 3001
 app.listen(port)
