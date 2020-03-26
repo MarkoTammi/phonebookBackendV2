@@ -8,6 +8,12 @@ const app = express()
 // Express's json parser
 app.use(express.json())
 
+// Cors middleware 
+const cors = require('cors')
+app.use(cors())
+
+
+// START of Morgan
 // Middleware Morgan for loggin HTTP request
 const morgan = require('morgan')
 // Predefined 'tiny' logging "GET /api/persons 200 163 - 7.675 ms"
@@ -21,8 +27,7 @@ app.use(morgan(':method - :url - :status - :body - :date[clf]'))
 
 // Log example "POST /api/persons 200 5.571 ms - 43 {"name":"Riitta","number":"123"} - 48 - Thu, 26 Mar 2020 08:49:15 GMT"
 // app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body - :req[content-length] - :date[web]'));
-
-// End of Morgan
+// END of Morgan
 
 
 let persons = [
@@ -113,7 +118,7 @@ app.post('/api/persons/', function (request,response) {
 
 
 // Delete person based on id
-app.delete('/api/person/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const person = persons.find(person => person.id === id)
     if (person) {

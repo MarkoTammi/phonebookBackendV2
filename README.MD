@@ -12,7 +12,8 @@ repo - git init
 Backendin käynnistys kehitysmoodissa  
 npm run dev >> localhost:3001  
 
-Ei vielä frontend integraatiota.
+Tehtävästä 3.9 eteenpäin front kommunikoi backendin kanssa.
+
 
 ### Edistyminen
 
@@ -46,4 +47,11 @@ Asennettu "npm install morgan"
 
 3.8*: puhelinluettelon backend step8  - git branch part3-8Step8  
 Morgan joka näyttää HTTP -pyynnön mukana tulevan datan.  
+
+3.9 puhelinluettelon backend step9  
+Asennettu CORS "npm install cors --save"  
+
+Frontend ja backend kommunikoivat nyt paitsi numeron päivitys.  
+
+
 
