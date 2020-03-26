@@ -41,6 +41,9 @@ Uuden nimen lisäys.
 3.6: puhelinluettelon backend step6 - git branch part3-6Step6  
 Uuden nimen virheenkäsittely  
 
+3.7: puhelinluettelon backend step7  
+Asennettu "npm install morgan"  
 
-
+3.8*: puhelinluettelon backend step8  - git branch part3-8Step8  
+Morgan joka näyttää HTTP -pyynnön mukana tulevan datan.  
 

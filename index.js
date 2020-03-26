@@ -8,6 +8,22 @@ const app = express()
 // Express's json parser
 app.use(express.json())
 
+// Middleware Morgan for loggin HTTP request
+const morgan = require('morgan')
+// Predefined 'tiny' logging "GET /api/persons 200 163 - 7.675 ms"
+// app.use(morgan('tiny'))
+
+// Define Morgan fields to log http request data
+morgan.token('body', function (request, response) { return JSON.stringify(request.body) });
+
+// Log example "POST - /api/persons - 200 - {"name":"Riitta","number":"123"} - 26/Mar/2020:08:45:19 +0000"
+app.use(morgan(':method - :url - :status - :body - :date[clf]'))
+
+// Log example "POST /api/persons 200 5.571 ms - 43 {"name":"Riitta","number":"123"} - 48 - Thu, 26 Mar 2020 08:49:15 GMT"
+// app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body - :req[content-length] - :date[web]'));
+
+// End of Morgan
+
 
 let persons = [
       {
@@ -109,7 +125,7 @@ app.delete('/api/person/:id', (request, response) => {
     }})
 
 
-// Unknown end poist
+// Unknown endpoint
 const unknownEndpoint = (req,res) => {
     res.status(404).send({ error: 'Unknown endpoint'})
   }
