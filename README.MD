@@ -53,5 +53,11 @@ Asennettu CORS "npm install cors --save"
 
 Frontend ja backend kommunikoivat nyt paitsi numeron päivitys.  
 
+3.12: tietokanta komentoriviltä  
+Asennettu "npm install mongoose --save"  
+Kirjasto MongoDB'n käyttöön  
+Luotu mongo.js testitietosto mongo yhteyden testaamiseen.  
+
+
 
 
