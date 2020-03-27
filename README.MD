@@ -52,11 +52,28 @@ Morgan joka näyttää HTTP -pyynnön mukana tulevan datan.
 Asennettu CORS "npm install cors --save"  
 
 Frontend ja backend kommunikoivat nyt paitsi numeron päivitys.  
+Data backendin koodissa.  
+
+Mongo käyttöön tehtävästä 3.12 eteenpäin.  
 
 3.12: tietokanta komentoriviltä  
 Asennettu "npm install mongoose --save"  
 Kirjasto MongoDB'n käyttöön  
 Luotu mongo.js testitietosto mongo yhteyden testaamiseen.  
+
+3.13: puhelinluettelo ja tietokanta, step1  
+Front hakee datan Mongosta.  
+Asennettu "npm install dotenv --save"  
+Ja lisätty .env -tiedosto .gitignore  
+Kirjasto ympäristömuuttujien hallintaan.  
+ 
+3.14: puhelinluettelo ja tietokanta, step2  
+Uuden numeron tallennus Mongoon.  
+
+3.15: puhelinluettelo ja tietokanta, step3 - git branch part3-15S  
+Nimen poisto Mongosta.  
+
+
 
 
 

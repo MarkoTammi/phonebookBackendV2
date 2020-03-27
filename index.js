@@ -2,11 +2,22 @@
 // Start server by "npm run dev"
 
 // 
+
+
+
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 
-// Express's json parser
-app.use(express.json())
+
+require('dotenv').config()
+const Person = require('./models/person')
+
+
+// Json parser
+//app.use(express.json())
+app.use(bodyParser.json())
+
 
 // Cors middleware 
 const cors = require('cors')
@@ -58,35 +69,35 @@ app.get('/', (request, response) => {
     })
 
 
-// Return info how many names in phonebook with timestamp
-app.get('/info', function (request,response) {
-    const personLength = persons.length.toString()
-    const resContent = '<p>Phonebook has info for '+ personLength + ' people</p><p>' + new Date() + '</p>'
-    response.send(resContent)
-})
-
 // Return all persons
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
-    })
+    Person
+    .find({})
+    .then(persons => {response.json(persons.map(person => person.toJSON()))})
+})
 
 
 // Return person info based on id number
 app.get('/api/persons/:id', function (request,response) {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        response.json(person)
-    } else {
-        // If person is not found by id return 404
-        response.status(404).end()
-    }})
+    Person
+        .findById(request.params.id)
+        .then(person => {
+            if (person) {
+                response.json(person.toJSON())
+            } else {
+                // Id format ok but not found from mongo
+                response.status(404).end()
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            response.status(400).send({error: "Id format wrong"})
+        })
+})
 
 
 // Add new person
 app.post('/api/persons/', function (request,response) {
-
-    const newId = Math.floor(Math.random() * Math.floor(100000))    
     const body = request.body 
 
     // POST request headers
@@ -98,28 +109,32 @@ app.post('/api/persons/', function (request,response) {
     }
 
     // Error if new name already exist
-    if (persons.find(person => person.name === body.name) ) {
+/*     if (persons.find(person => person.name === body.name) ) {
         return response.status(400).json({error: 'Name already exist. Name have to be unique.'})
-    }
+    } */
 
-    // create new person object from request data with random id
-    const newPerson = {
-        name : body.name, 
-        number : body.number,
-        id : newId 
-    }
+    // create new person object from request data
+    const newPerson = new Person(
+        {
+            name : body.name, 
+            number : body.number,
+        }
+    )
 
-    // Add new person to phonebook
-    persons = persons.concat(newPerson)
-
-    // Return new person with id
-    response.json(newPerson)
+    // Add new person to Mongo phonebook and return saved person
+    newPerson.save()
+        .then(savedPerson => {response.json(savedPerson.toJSON())
+    })
 })
 
 
 // Delete person based on id
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
+    Person.findByIdAndRemove(request.params.id)
+        .then(result => {response.status(204).end()})
+    })
+
+/*     const id = Number(request.params.id)
     const person = persons.find(person => person.id === id)
     if (person) {
         persons = persons.filter(person => person.id !== id)  
@@ -127,17 +142,17 @@ app.delete('/api/persons/:id', (request, response) => {
     } else {
         // If person is not found by id return 404
         response.status(404).end()
-    }})
+    }}) */
 
 
 // Unknown endpoint
-const unknownEndpoint = (req,res) => {
-    res.status(404).send({ error: 'Unknown endpoint'})
+const unknownEndpoint = (request,response) => {
+    response.status(404).send({ error: 'Unknown endpoint'})
   }
 app.use(unknownEndpoint)
 
 
-const port = 3001
+const port = process.env.PORT
 app.listen(port)
 console.log(`Server running on port ${port}`)
 
