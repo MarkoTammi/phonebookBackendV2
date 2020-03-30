@@ -69,16 +69,25 @@ app.get('/', (request, response) => {
     })
 
 
+// Return info how many names in phonebook with timestamp
+app.get('/info', function (request,response) {
+    Person
+        .find({})
+        .then(persons => {response.json(persons.length.toString())})
+})
+
+
 // Return all persons
 app.get('/api/persons', (request, response) => {
     Person
     .find({})
     .then(persons => {response.json(persons.map(person => person.toJSON()))})
+    .catch(error => next(error))
 })
 
 
 // Return person info based on id number
-app.get('/api/persons/:id', function (request,response) {
+app.get('/api/persons/:id', function (request, response, next) {
     Person
         .findById(request.params.id)
         .then(person => {
@@ -89,15 +98,17 @@ app.get('/api/persons/:id', function (request,response) {
                 response.status(404).end()
             }
         })
-        .catch(error => {
+        /* .catch(error => {
             console.log(error)
             response.status(400).send({error: "Id format wrong"})
-        })
+        }) */
+        // Error handling with errorHandler
+        .catch(error => next(error))
 })
 
 
 // Add new person
-app.post('/api/persons/', function (request,response) {
+app.post('/api/persons/', function (request,response, next) {
     const body = request.body 
 
     // POST request headers
@@ -107,11 +118,6 @@ app.post('/api/persons/', function (request,response) {
     if (!body.name || !body.number) {
         return response.status(400).json({error: 'Name or number is missing'})
     }
-
-    // Error if new name already exist
-/*     if (persons.find(person => person.name === body.name) ) {
-        return response.status(400).json({error: 'Name already exist. Name have to be unique.'})
-    } */
 
     // create new person object from request data
     const newPerson = new Person(
@@ -123,26 +129,34 @@ app.post('/api/persons/', function (request,response) {
 
     // Add new person to Mongo phonebook and return saved person
     newPerson.save()
-        .then(savedPerson => {response.json(savedPerson.toJSON())
-    })
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormattedPerson => {response.json(savedAndFormattedPerson)})
+        .catch(error => next(error))
 })
 
+// Update exiting name with new number
+app.put('/api/persons/:id', function (request, response, next) {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: body.id
+    }
+    
+    Person.findByIdAndUpdate(body.id, person, { runValidators: true, context: 'query' })
+        .then(updatedPerson => {
+            response.json(updatedPerson.toJSON())
+        })
+        .catch(error => next(error))
+})
 
 // Delete person based on id
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(result => {response.status(204).end()})
-    })
-
-/*     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        persons = persons.filter(person => person.id !== id)  
-        response.status(204).end()
-    } else {
-        // If person is not found by id return 404
-        response.status(404).end()
-    }}) */
+        .catch(error => next(error))
+})
 
 
 // Unknown endpoint
@@ -151,6 +165,16 @@ const unknownEndpoint = (request,response) => {
   }
 app.use(unknownEndpoint)
 
+// Middleware for error handling
+const errorHandler = (error, request, response, next) => {
+    console.log('errorHandler')
+    console.error(error.message)
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+    next(error)
+}
+app.use(errorHandler)
 
 const port = process.env.PORT
 app.listen(port)
