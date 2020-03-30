@@ -70,8 +70,24 @@ Kirjasto ympäristömuuttujien hallintaan.
 3.14: puhelinluettelo ja tietokanta, step2  
 Uuden numeron tallennus Mongoon.  
 
-3.15: puhelinluettelo ja tietokanta, step3 - git branch part3-15S  
+3.15: puhelinluettelo ja tietokanta, step3 - git branch part3-15  
 Nimen poisto Mongosta.  
+
+3.16: puhelinluettelo ja tietokanta, step4  
+Virheiden käsittely keskitetty errorHandler middlewareen  
+
+3.17*: puhelinluettelo ja tietokanta, step5  
+Olemassa olevan henkilön numeron päivitys.  
+
+3.18*: puhelinluettelo ja tietokanta, step6  
+api/persons/:id ja /info käsittelyt ok.  
+
+3.19: puhelinluettelo ja tietokanta, step7  
+Asennettu mongoose-unique-validator by npm  
+Lisätty backendiin toiminnallisuus joka estää saman nimiset nimet.  
+
+3.20*: puhelinluettelo ja tietokanta, step8  
+Laajennettu validaatiota - nimi min 3 ja numero 5 merkkiä.  
 
 
 

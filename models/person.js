@@ -4,14 +4,14 @@
 
 
 const mongoose = require('mongoose')
-//const uniqueValidator = require('mongoose-unique-validator')
+const uniqueValidator = require('mongoose-unique-validator')
+
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 // define url to mongo db
 const url = process.env.MONGODB_URI
-console.log('Connecting to .... ', url)
-
-
-// mongoose.set('useFindAndModify', false)
+//console.log('Connecting to .... ', url)
 
 // Connect to mongo db
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -26,23 +26,26 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 // schema and model for name and number
 // with validation criterias
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
-/*   name: {
+// Used without mongoose-unique-validator
+/*     name: String,
+    number: String */
+
+    name: {
       type:String, 
       minlength: 3,
       required: true,
       unique: true
     },
-  number: {
+    number: {
       type: String,
-      minlength: 3,
+      minlength: 5,
       required: true
-    } */
+    }
 })
-// const Person = mongoose.model('Person', personSchema)
-// excute check that name and number are valid
-//personSchema.plugin(uniqueValidator)
+
+// excute check that name and number exist and are valid
+// and name is unique
+personSchema.plugin(uniqueValidator)
 
 //toJSON metodi which convert result from Mongo to string
 personSchema.set('toJSON', {
