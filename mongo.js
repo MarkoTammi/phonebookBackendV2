@@ -1,5 +1,5 @@
 
-/* 
+/*
 
 Test file for mondo db
 Command line use example
@@ -13,8 +13,8 @@ const mongoose = require('mongoose')
 
 // password is missing
 if ( process.argv.length<3 ) {
-  console.log('give password as argument')
-  process.exit(1)
+    console.log('give password as argument')
+    process.exit(1)
 }
 
 const password = process.argv[2]
@@ -26,9 +26,9 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // create schema and model for name and number
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-  id: String
+    name: String,
+    number: String,
+    id: String
 })
 const Person = mongoose.model('Person', personSchema)
 
@@ -37,22 +37,22 @@ const Person = mongoose.model('Person', personSchema)
 if ( process.argv.length === 3 ){
     console.log('phonebook:')
     Person
-    .find({})
-    .then(result => {
-        result.forEach(person => {
-            console.log(person)
+        .find({})
+        .then(result => {
+            result.forEach(person => {
+                console.log(person)
+            })
+            mongoose.connection.close()
+            process.exit(2)
         })
-        mongoose.connection.close()
-        process.exit(2)
-    })
 }
 
 
 // person name and number is given as comman line parameter
 const person = new Person({
-  name: process.argv[3],
-  number: process.argv[4],
-  id: process.argv[5]
+    name: process.argv[3],
+    number: process.argv[4],
+    id: process.argv[5]
 })
 person
     .save()
@@ -60,3 +60,5 @@ person
         console.log('added ' + process.argv[3] + ' number ' + process.argv[4] + ' to phonebook')
         mongoose.connection.close()
     })
+
+

@@ -1,9 +1,6 @@
 
 // Start server by "npm run dev"
 
-// 
-
-
 
 const express = require('express')
 const app = express()
@@ -19,7 +16,7 @@ const Person = require('./models/person')
 app.use(bodyParser.json())
 
 
-// Cors middleware 
+// Cors middleware
 const cors = require('cors')
 app.use(cors())
 
@@ -31,7 +28,7 @@ const morgan = require('morgan')
 // app.use(morgan('tiny'))
 
 // Define Morgan fields to log http request data
-morgan.token('body', function (request, response) { return JSON.stringify(request.body) });
+morgan.token('body', function (request, response) { return JSON.stringify(request.body) })
 
 // Log example "POST - /api/persons - 200 - {"name":"Riitta","number":"123"} - 26/Mar/2020:08:45:19 +0000"
 app.use(morgan(':method - :url - :status - :body - :date[clf]'))
@@ -41,32 +38,10 @@ app.use(morgan(':method - :url - :status - :body - :date[clf]'))
 // END of Morgan
 
 
-let persons = [
-      {
-        "name": "Marko",
-        "number": "98989",
-        "id": 1
-      },
-      {
-        "name": "Ööö",
-        "number": "8989",
-        "id": 5
-      },
-      {
-        "name": "Aaa",
-        "number": "0900",
-        "id": 6
-      },
-      {
-        "name": "Äiti",
-        "number": "909090",
-        "id": 7
-      }
-    ]
 
 app.get('/', (request, response) => {
     response.send('<p>HY Fullstack MooC Phonebook backend V2 by MarkoTammi</p>')
-    })
+})
 
 
 // Return info how many names in phonebook with timestamp
@@ -78,11 +53,11 @@ app.get('/info', function (request,response) {
 
 
 // Return all persons
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     Person
-    .find({})
-    .then(persons => {response.json(persons.map(person => person.toJSON()))})
-    .catch(error => next(error))
+        .find({})
+        .then(persons => {response.json(persons.map(person => person.toJSON()))})
+        .catch(error => next(error))
 })
 
 
@@ -109,20 +84,20 @@ app.get('/api/persons/:id', function (request, response, next) {
 
 // Add new person
 app.post('/api/persons/', function (request,response, next) {
-    const body = request.body 
+    const body = request.body
 
     // POST request headers
     //console.log("POST request headers", request.headers)
 
     // Error if name or number field is empty
     if (!body.name || !body.number) {
-        return response.status(400).json({error: 'Name or number is missing'})
+        return response.status(400).json({ error: 'Name or number is missing' })
     }
 
     // create new person object from request data
     const newPerson = new Person(
         {
-            name : body.name, 
+            name : body.name,
             number : body.number,
         }
     )
@@ -130,7 +105,7 @@ app.post('/api/persons/', function (request,response, next) {
     // Add new person to Mongo phonebook and return saved person
     newPerson.save()
         .then(savedPerson => savedPerson.toJSON())
-        .then(savedAndFormattedPerson => {response.json(savedAndFormattedPerson)})
+        .then(savedAndFormattedPerson => { response.json(savedAndFormattedPerson) })
         .catch(error => next(error))
 })
 
@@ -143,7 +118,7 @@ app.put('/api/persons/:id', function (request, response, next) {
         number: body.number,
         id: body.id
     }
-    
+
     Person.findByIdAndUpdate(body.id, person, { runValidators: true, context: 'query' })
         .then(updatedPerson => {
             response.json(updatedPerson.toJSON())
@@ -161,17 +136,17 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 // Unknown endpoint
 const unknownEndpoint = (request,response) => {
-    response.status(404).send({ error: 'Unknown endpoint'})
-  }
+    response.status(404).send({ error: 'Unknown endpoint' })
+}
 app.use(unknownEndpoint)
 
 // Middleware for error handling
 const errorHandler = (error, request, response, next) => {
     console.log('errorHandler')
     console.error(error.message)
-    if (error.name === 'CastError' && error.kind == 'ObjectId') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } 
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
     next(error)
 }
 app.use(errorHandler)
